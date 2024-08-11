@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Photo from '../Photos/Cancel.svg';
 
-const RemoveUser = ({ onClose, userId }) => {
-    const remUser = async () => {
+const ChangeRole = ({ onClose, userId }) => {
+    const [newRole, setNewRole] = useState('');
+
+    const chgRole = async () => {
         try {
-            await axios.post(`https://localhost:7161/api/Admin/delete-user/${userId}`);
-            console.log('User removed');
-            onClose(); 
-            window.location.reload()
+            const res = await axios.post(`https://localhost:7161/api/Admin/change-user-role?userId=${userId}`, {
+                newRole: newRole,
+            });
+            console.log(res);
+            onClose();
+            window.location.reload();
         } catch (error) {
-            console.error('Error removing user', error);
+            console.error('Error changing role:', error);
         }
     };
 
@@ -19,20 +23,28 @@ const RemoveUser = ({ onClose, userId }) => {
             <div className="pop-order" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '40%', maxHeight: '98%', overflowY: 'auto' }}>
                 <div className="pop-order-header">
                     <div className="pop-order-header-name">
-                        <h2>Remove Transport</h2>
+                        <h2>Change Role</h2>
                     </div>
                     <div className="pop-order-header-icon">
                         <button onClick={onClose}><img src={Photo} alt="Close" /></button>
                     </div>
                 </div>
                 <div className="pop-order-main">
-                    <p>Do you want to remove this Transport?</p>
+                    <div className="pop-order-main-one">
+                        <p>Select Role</p>
+                        <select onChange={(e) => setNewRole(e.target.value)} value={newRole}>
+                            <option value="">Select a role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Manager">Manager</option>
+                            <option value="User">User</option>
+                        </select>
+                    </div>
                     <div className="pop-order-main-footer">
                         <div className="pop-order-main-footer-date">
                             <p>Create: Adil 2023.05.11</p>
                         </div>
                         <div className="pop-order-main-footer-btn">
-                            <button onClick={remUser}>Remove</button>
+                            <button onClick={chgRole}>Done</button>
                         </div>
                     </div>
                 </div>
@@ -41,4 +53,4 @@ const RemoveUser = ({ onClose, userId }) => {
     );
 };
 
-export default RemoveUser;
+export default ChangeRole;

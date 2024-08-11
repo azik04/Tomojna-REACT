@@ -16,10 +16,10 @@ const LogIn = () => {
             });
             console.log(res);
             if (res.status === 200) {
-                console.log(res.data.token)
-                var token = res.data.token
-                localStorage.setItem("JWT" , JSON.stringify(token))
-                navigate('/Orders')
+                const token = res.data.token;
+                const expiryTime = Date.now() + 3 * 60 * 60 * 1000;
+                localStorage.setItem("JWT", JSON.stringify({ token, expiryTime }));
+                navigate('/Orders');
             }
         } catch (error) {
             console.error(error);

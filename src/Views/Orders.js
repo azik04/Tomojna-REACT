@@ -77,24 +77,6 @@ const Orders = () => {
                         </div>
                     </div>
                 </div>
-                <div className='mmmmm'>
-                    <div className="main-tabs">
-                        {selectedOrders.map((orderId, index) => (
-                            <Link
-                                key={index}
-                                to={`/Order/${orderId}`}
-                                className={`main-tabs-select ${activeTab === index ? 'active' : ''}`}
-                                onClick={() => setActiveTab(index)} 
-                            >
-                                <p>Order {orderId}</p>
-                                <i className="fa-solid fa-xmark" onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleOrderRemove(orderId);
-                                }}></i>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
                 <div className="main-table">
                     <table>
                         <thead>

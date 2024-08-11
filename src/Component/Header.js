@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import Icon from '../Photos/Icon.svg';
 import Add from '../Photos/ADD.svg';
 import Settings from '../Photos/Settings.svg';
 import Logo from '../Photos/Logo.svg';
 import User from '../Photos/User.svg';
+
 const Header = () => {
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const toggleActive = (index) => {
+    const handleClick = (index) => {
         setActiveIndex(index);
     };
 
     const options = [
-        { src: Icon, altText: 'Icon', fetch:'/Orders'  },
-        { src: Add, altText: 'Add' , fetch:'/FreightForwarder'  },
-        { src: Settings, altText: 'Settings', fetch:'/Stock' },
-        { src: User, altText: 'User' , fetch:'/Users' }
+        { src: Icon, altText: 'Icon', to: '/Orders' },
+        { src: Add, altText: 'Add', to: '/FreightForwarder' },
+        { src: Settings, altText: 'Settings', to: '/Stock' },
+        { src: User, altText: 'User', to: '/Users' }
     ];
 
     return (
@@ -27,14 +29,14 @@ const Header = () => {
             </div>
             <div className="header-options">
                 {options.map((option, index) => (
-                    <a
+                    <NavLink
                         key={index}
-                        href={option.fetch}
-                        className={`header-options-select ${index === activeIndex ? 'active' : ''}`}
-                        onClick={() => toggleActive(index)}
+                        to={option.to}
+                        className={({ isActive }) => `header-options-select ${isActive ? 'active' : ''}`}
+                        onClick={() => handleClick(index)}
                     >
                         <img src={option.src} className="delete-icon" alt={option.altText} />
-                    </a>
+                    </NavLink>
                 ))}
             </div>
         </header>

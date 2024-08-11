@@ -3,7 +3,6 @@ import axios from 'axios';
 import RemoveFreight from '../Component/RemoveFreight';
 import CreateFreight from '../Component/CreateFreight';
 import EditFreighr from '../Component/EditFreighr';
-import Photo from '../Photos/filter-add.svg';
 
 const FreightForwarder = () => {
     const [data, setData] = useState([]);  
@@ -15,6 +14,8 @@ const FreightForwarder = () => {
     const [removeId, setRemoveId] = useState(null);
     const [edirId, setEditId] = useState(null);
     const pageSize = 10;
+    const [freight, setFreight] = useState([]);
+
 
     useEffect(() => {
         const fetchData = async () => {

@@ -113,6 +113,7 @@ body {
     padding: 2.5px;
     display: flex;
     flex-direction: column;
+    color: rgba(56, 148, 151, 1);
     align-items: center;
     margin: auto;
     margin-top: 10px;

@@ -32,25 +32,18 @@ const Transportations = () => {
     localStorage.setItem('selectedTransports', JSON.stringify(selectedTransports));
   }, [selectedOrders, selectedTransports]);
 
-  const handleOrderClick = (orderId, itemTransportId) => {
-    if (!selectedOrders.includes(orderId)) {
-      setSelectedOrders([...selectedOrders, orderId]);
-    }
+  const handleOrderClick = (orderId, transportId = null) => {
+    setSelectedOrders((prev) => [...prev, orderId]);
+    setSelectedTransports((prev) => ({
+      ...prev,
+      [orderId]: transportId ? [transportId] : [],
+    }));
     setActiveTab(orderId);
-    const updatedTransports = { ...selectedTransports };
-    if (!updatedTransports[orderId]) {
-      updatedTransports[orderId] = [];
-    }
-    if (!updatedTransports[orderId].includes(itemTransportId)) {
-      updatedTransports[orderId].push(itemTransportId);
-    }
-    setSelectedTransports(updatedTransports);
-    setActiveTransportTab(itemTransportId);
   };
 
   const handleOrderRemove = (orderId) => {
-    setSelectedOrders(selectedOrders.filter((order) => order !== orderId));
-    setSelectedTransports(prev => {
+    setSelectedOrders((prev) => prev.filter((order) => order !== orderId));
+    setSelectedTransports((prev) => {
       const updated = { ...prev };
       delete updated[orderId];
       return updated;
@@ -82,7 +75,7 @@ const Transportations = () => {
                 key={orderId}
                 className={`main-tabs-select ${activeTab === orderId ? 'active' : ''}`}
               >
-                <Link to={`/Order/${orderId}`} onClick={() => handleOrderClick(orderId, selectedTransports[orderId]?.[0] || null)}>
+                <Link to={`/Order/${orderId}`} onClick={() => handleOrderClick(orderId)}>
                   <p>Order {orderId}</p>
                 </Link>
                 <i
@@ -115,17 +108,21 @@ const Transportations = () => {
         </div>
         <div className='mmmmm'>
           <div className="main-tabs">
-            {selectedOrders.map((orderId, index) => (
+            {selectedOrders.map((orderId) => (
               <Link
-                key={index}
+                key={orderId}
                 to={`/Order/${orderId}`}
                 className={`main-tabs-select ${activeTab === orderId ? 'active' : ''}`}
-                onClick={() => handleOrderClick(id, items[index]?.id)}>
+                onClick={() => handleOrderClick(orderId)}
+              >
                 <p>Order {orderId}</p>
-                <i className="fa-solid fa-xmark" onClick={(e) => {
-                  e.stopPropagation();
-                  handleOrderRemove(orderId);
-                }}></i>
+                <i
+                  className="fa-solid fa-xmark"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOrderRemove(orderId);
+                  }}
+                ></i>
               </Link>
             ))}
           </div>

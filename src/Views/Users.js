@@ -3,6 +3,10 @@ import axios from 'axios';
 import RemoveUser from '../Component/RemoveUser';
 import CreateUser from '../Component/CreateUser';
 import Photo from '../Photos/filter-add.svg';
+import ChangePassword from '../Component/ChangePassword';
+import ChangeEmail from '../Component/ChangeEmail';
+import ChangeRole from '../Component/ChangeRole';
+
 const Users = () => {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -11,9 +15,15 @@ const Users = () => {
     const [remPopUp, setRemPopUp] = useState(false);
     const [removeId, setRemoveId] = useState(null);
     const [crtPopUp, setCrtPopUp] = useState(false);
+    const [chgPswPopUp, setChgPswPopUp] = useState(false);
+    const [ChqPswId, setChqPswId] = useState(null);
+    const [chgEmPopUp, setEmPopUp] = useState(false);
+    const [ChqEmId, setEmId] = useState(null);
+    const [chgRolePopUp, setChgRolePopUp] =useState(false);
+    const [chgRoleId, setChgRoleId] = useState(null);
 
     useEffect(() => {
-        const fetchUser = async(page) => {
+        const fetchUser = async (page) => {
             try {
                 const res = await axios.get(`https://localhost:7161/api/Admin/users-by-page?pageNumber=${page}&pageSize=${pageSize}`);
                 setTotalPages(Math.ceil(res.data.totalCount / pageSize));
@@ -25,39 +35,67 @@ const Users = () => {
         fetchUser(currentPage);
     }, [currentPage]);
 
-    const handlePrevPage = async() => {
+    const handlePrevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
         }
     };
 
-    const handleNextPage = async() => {
+    const handleNextPage = () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
         }
     };
 
-    const remUserPopUp = async(id) => {
+    const remUserPopUp = (id) => {
         setRemoveId(id);
         setRemPopUp(true);
     };
 
-    const remUserPopUpClose = async() => {
+    const remUserPopUpClose = () => {
         setRemPopUp(false);
     };
-    const createUserPopUp = async() => {
-        setCrtPopUp(true)
+
+    const createUserPopUp = () => {
+        setCrtPopUp(true);
+    };
+
+    const createUserPopUpClose = () => {
+        setCrtPopUp(false);
+    };
+
+    const changePswPopUp = (id) => {
+        setChqPswId(id);
+        setChgPswPopUp(true);
+    };
+
+    const changePswPopUpClose = () => {
+        setChgPswPopUp(false);
+    };
+
+    const changeEmPopUp = (id) => {
+        setEmId(id);
+        setEmPopUp(true);
+    };
+
+    const changeEmPopUpClose = () => {
+        setEmPopUp(false);
+    };
+
+    const changeRolePopUp = async(id) => {
+        setChgRoleId(id)
+        setChgRolePopUp(true)
     }
-    const createUserPopUpClose = async() => {
-        setCrtPopUp(false)
+    const changeRolePopUpClose = async() => {
+        setChgRolePopUp(false)
     }
 
     return (
         <main>
             <div className="main">
-                    <div>
-                        <button onClick={createUserPopUp}>Create USER</button>
-                    </div>
+                <div>
+                    <button onClick={createUserPopUp}>Create USER</button>
+                </div>
                 <div className="main-filter">
                     <div className="main-filter-total">
                         <p><strong>Total : {users.length} Users</strong></p>
@@ -79,22 +117,20 @@ const Users = () => {
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th className="main-table-name">Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Edit</th>
+                                <th className="main-table-name">Email</th>
+                                <th>Change Password</th>
+                                <th>Change Email</th>
+                                <th>Change Role</th>
                                 <th>Remove</th>
                             </tr>
                         </thead>
                         <tbody>
                             {users.map(user => (
                                 <tr key={user.id}>
-                                    <td>{user.id}</td>
-                                    <td>{user.userName}</td>
                                     <td>{user.email}</td>
-                                    <td>{user.role}</td>
-                                    <td><a href="#">On Going</a></td>
+                                    <td><button onClick={() => changePswPopUp(user.id)}>Change Password</button></td>
+                                    <td><button onClick={() => changeEmPopUp(user.id)}> Change Email</button></td>
+                                    <td><button onClick ={() =>changeRolePopUp(user.id)}>Change Role</button></td>
                                     <td><button onClick={() => remUserPopUp(user.id)}>Remove</button></td>
                                 </tr>
                             ))}
@@ -108,7 +144,10 @@ const Users = () => {
                 </div>
             </div>
             {remPopUp && <RemoveUser onClose={remUserPopUpClose} userId={removeId} />}
-            {crtPopUp && <CreateUser onClose={createUserPopUpClose}/>}
+            {crtPopUp && <CreateUser onClose={createUserPopUpClose} />}
+            {chgPswPopUp && <ChangePassword onClose={changePswPopUpClose} userId={ChqPswId} />}
+            {chgEmPopUp && <ChangeEmail onClose={changeEmPopUpClose} userId={ChqEmId} />}
+            {chgRolePopUp && <ChangeRole onClose={changeRolePopUpClose} userId={chgRoleId}/>}
         </main>
     );
 };

@@ -23,20 +23,24 @@ const Transportation = () => {
   const { id, itemTransportId } = useParams();
   const [popUpRemVis, setPopUpRemVis] = useState(false);
   const [popUpUpdVis, setPopUpUpdVis] = useState(false);
-  const [selectedOrders, setSelectedOrders] = useState(JSON.parse(localStorage.getItem('selectedOrders')) || []);
-  const [selectedTransports, setSelectedTransports] = useState(JSON.parse(localStorage.getItem('selectedTransports')) || {});
+  const [selectedOrders, setSelectedOrders] = useState(
+    JSON.parse(localStorage.getItem('selectedOrders'))?.map(Number) || []
+  );
+  const [selectedTransports, setSelectedTransports] = useState(
+    JSON.parse(localStorage.getItem('selectedTransports')) || {}
+  );
   const [activeTab, setActiveTab] = useState(null);
   const [activeTransportTab, setActiveTransportTab] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const savedOrders = JSON.parse(localStorage.getItem('selectedOrders')) || [];
+    const savedOrders = JSON.parse(localStorage.getItem('selectedOrders'))?.map(Number) || [];
     const savedTransports = JSON.parse(localStorage.getItem('selectedTransports')) || {};
     setSelectedOrders(savedOrders);
     setSelectedTransports(savedTransports);
-    const initialActiveTab = savedOrders.indexOf(parseInt(id));
-    setActiveTab(initialActiveTab !== -1 ? savedOrders[initialActiveTab] : null);
-    setActiveTransportTab(savedTransports[id]?.[0] || null);
+    const initialActiveTab = savedOrders.includes(Number(id)) ? Number(id) : null;
+    setActiveTab(initialActiveTab);
+    setActiveTransportTab(savedTransports[Number(id)]?.[0] || null);
   }, [id]);
 
   useEffect(() => {
@@ -66,8 +70,13 @@ const Transportation = () => {
   };
 
   const handleOrderRemove = (orderId) => {
-    setSelectedOrders(selectedOrders.filter((order) => order !== orderId));
-    if (activeTab !== null && selectedOrders[activeTab] === orderId) {
+    setSelectedOrders((prev) => prev.filter((order) => order !== orderId));
+    setSelectedTransports((prev) => {
+      const updated = { ...prev };
+      delete updated[orderId];
+      return updated;
+    });
+    if (activeTab === orderId) {
       setActiveTab(null);
     }
     if (selectedOrders.length === 0) {
@@ -76,15 +85,15 @@ const Transportation = () => {
   };
 
   const handleTransportRemove = (orderId, transportId) => {
-    setSelectedTransports((prevTransports) => {
-      const updatedTransports = { ...prevTransports };
-      if (updatedTransports[orderId]) {
-        updatedTransports[orderId] = updatedTransports[orderId].filter(id => id !== transportId);
-        if (updatedTransports[orderId].length === 0) {
-          delete updatedTransports[orderId];
+    setSelectedTransports((prev) => {
+      const updated = { ...prev };
+      if (updated[orderId]) {
+        updated[orderId] = updated[orderId].filter(id => id !== transportId);
+        if (updated[orderId].length === 0) {
+          delete updated[orderId];
         }
       }
-      return updatedTransports;
+      return updated;
     });
     if (activeTransportTab === transportId) {
       setActiveTransportTab(null);
@@ -121,8 +130,8 @@ const Transportation = () => {
 
         <div className='mmmmbb'>
           <div className="main-tabs">
-            {selectedTransports[id]?.map((transportId) => (
-              <div key={transportId} className={`main-tabs-select ${activeTransportTab === transportId ? 'active' : ''}`} onClick={() => handleTransportClick(id, transportId)}>
+            {selectedTransports[Number(id)]?.map((transportId) => (
+              <div key={transportId} className={`main-tabs-select ${activeTransportTab === transportId ? 'active' : ''}`} onClick={() => handleTransportClick(Number(id), transportId)}>
                 <Link to={`/Order/${id}/Itemtransport/${transportId}`}>
                   <p>Transport {transportId}</p>
                 </Link>
@@ -130,79 +139,79 @@ const Transportation = () => {
                   className="fa-solid fa-xmark"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleTransportRemove(id, transportId);
+                    handleTransportRemove(Number(id), transportId);
                   }}
                 ></i>
               </div>
             ))}
           </div>
         </div>
-      <div className="main-info">
-        <div className="main-info-begin">
-          <div className="main-info-begin-name">
-            <p>2893 Austin Secret Lane</p>
+        <div className="main-info">
+          <div className="main-info-begin">
+            <div className="main-info-begin-name">
+              <p>2893 Austin Secret Lane</p>
+            </div>
+            <div className="main-info-begin-options">
+              <button onClick={popUpVisible} className="main-info-begin-options-btns"><img src={Delate} alt="Delete" className="delete-icon" /></button>
+              <button onClick={popUpVisibleUPD} className="main-info-begin-options-btns"><img src={Edit} alt="Edit" className="delete-icon" /></button>
+            </div>
           </div>
-          <div className="main-info-begin-options">
-            <button onClick={popUpVisible} className="main-info-begin-options-btns"><img src={Delate} alt="Delete" className="delete-icon" /></button>
-            <button onClick={popUpVisibleUPD} className="main-info-begin-options-btns"><img src={Edit} alt="Edit" className="delete-icon" /></button>
+          <div className="main-info-text">
+            <div className="main-info-text-tr-main">
+              <div className="main-info-text-main-one">
+                <p>{details.name}</p>
+                <h2>{formatDate(details.plannedPU)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>Planned DE</p>
+                <h2>{formatDate(details.plannedDE)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>Custom Start</p>
+                <h2>{formatDate(details.customStart)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>Transportation Method</p>
+                <h2>{formatDate(details.transportationMethod)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>PU</p>
+                <h2>{formatDate(details.pu)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>DE</p>
+                <h2>{formatDate(details.de)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>Custom End</p>
+                <h2>{formatDate(details.customEnd)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>Transport</p>
+                <h2>{formatDate(details.transport)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>Act PU</p>
+                <h2>{formatDate(details.actPU)}</h2>
+              </div>
+              <div className="main-info-text-main-one">
+                <p>Act DE</p>
+                <h2>{formatDate(details.actDE)}</h2>
+              </div>
+            </div>
+            <div className="main-info-text--tr-msg">
+              <p className="main-info-text-msg-name">Comments</p>
+              <p className="text">{details.comment}</p>
+            </div>
+          </div>
+          <div className="main-info-blocks-tr">
+            <ItemList />
+            <Rfq />
           </div>
         </div>
-        <div className="main-info-text">
-          <div className="main-info-text-tr-main">
-            <div className="main-info-text-main-one">
-              <p>{details.name}</p>
-              <h2>{formatDate(details.plannedPU)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>Planned DE</p>
-              <h2>{formatDate(details.plannedDE)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>Custom Start</p>
-              <h2>{formatDate(details.customStart)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>Transportation Method</p>
-              <h2>{formatDate(details.transportationMethod)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>PU</p>
-              <h2>{formatDate(details.pu)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>DE</p>
-              <h2>{formatDate(details.de)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>Custom End</p>
-              <h2>{formatDate(details.customEnd)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>Transport</p>
-              <h2>{formatDate(details.transport)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>Act PU</p>
-              <h2>{formatDate(details.actPU)}</h2>
-            </div>
-            <div className="main-info-text-main-one">
-              <p>Act DE</p>
-              <h2>{formatDate(details.actDE)}</h2>
-            </div>
-          </div>
-          <div className="main-info-text--tr-msg">
-            <p className="main-info-text-msg-name">Comments</p>
-            <p className="text">{details.comment}</p>
-          </div>
-        </div>
-        <div className="main-info-blocks-tr">
-          <ItemList />
-          <Rfq />
-        </div>
+        {popUpRemVis && <RemoveTrasnsport onClose={popUpNonVisible} />}
+        {popUpUpdVis && <EditTransport onClose={popUpNonVisibleUPD} />}
       </div>
-      {popUpRemVis && <RemoveTrasnsport onClose={popUpNonVisible} />}
-      {popUpUpdVis && <EditTransport onClose={popUpNonVisibleUPD} />}
-    </div>
     </main>
   );
 };

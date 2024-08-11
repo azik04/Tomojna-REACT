@@ -10,21 +10,24 @@ import Transportations from './Views/Transportations';
 import FreightForwarder from './Views/FreightForwarder';
 import Stock from './Views/Stock';
 import ShippingRate from './Views/ShippingRate';
+import PrivateRoutes from './Utils/PrivateRoutes';
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route index element={<LogIn />} />
-                <Route path="/" element={<LayOut />}>
-                    <Route path="Orders" element={<Orders />} />
-                    <Route path="Order/:id/Itemtransport/:itemTransportId" element={<Transportation />} />
-                    <Route path="Order/:id/Itemtransports" element={<Transportations />} />
-                    <Route path="Order/:id" element={<Order />} />
-                    <Route path="Users" element={<Users />} />
-                    <Route path="FreightForwarder" element={<FreightForwarder />} />
-                    <Route path="Stock" element={<Stock />} />
-                    <Route path="Order/:id/ShippingRate" element={<ShippingRate />} />
-                </Route>
+                {/* <Route element={<PrivateRoutes />}> */}
+                    <Route path="/" element={<LayOut />}>
+                        <Route path="Orders" element={<Orders />} />
+                        <Route path="Order/:id/Itemtransport/:itemTransportId" element={<Transportation />} />
+                        <Route path="Order/:id/Itemtransports" element={<Transportations />} />
+                        <Route path="Order/:id" element={<Order />} />
+                        <Route path="Users" element={<Users />} />
+                        <Route path="FreightForwarder" element={<FreightForwarder />} />
+                        <Route path="Stock" element={<Stock />} />
+                        <Route path="Order/:id/ShippingRate" element={<ShippingRate />} />
+                    </Route>
+                {/* </Route> */}
             </Routes>
         </BrowserRouter>
     );

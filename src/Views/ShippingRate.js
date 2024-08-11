@@ -98,7 +98,7 @@ const ShippingRate = () => {
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th className="main-table-name">Name</th>
+                                <th className="main-table-name">freightForwarderName</th>
                                 <th>Price</th>
                                 <th>Edit</th>
                                 <th>Remove</th>
@@ -109,7 +109,7 @@ const ShippingRate = () => {
                                 data.map(user => (
                                     <tr key={user.id}>
                                         <td>{user.id}</td>
-                                        <td>{user.orderId}</td>
+                                        <td>{user.freightForwarderName}</td>
                                         <td>{user.price}</td>
                                         <td><button onClick={() => edtRataPopUp(user.id)}>Edit</button></td>
                                         <td><button onClick={() => remRataPopUp(user.id)}>Remove</button></td>
