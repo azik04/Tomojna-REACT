@@ -7,6 +7,7 @@ import EditOrder from '../Component/EditOrder';
 import Item from '../Component/Item';
 import Shipping from '../Component/Shipping';
 import RemoveOrder from '../Component/RemoveOrder';
+import RemoveTheme from '../Component/RemoveTask';
 import CreateTransport from '../Component/CreateTransport';
 
 const formatDate = (dateString) => {
@@ -178,7 +179,7 @@ const Order = () => {
                 </div>
             </div>
             {isEditPopupVisible && <EditOrder onClose={closePopUpVisible} />}
-            {remPopUp && <RemoveOrder onClose={closeRemPopUp} id={removeId} onOrderRemoved={handleOrderRemoved} />}
+            {remPopUp && <RemoveTheme onClose={closeRemPopUp} id={removeId} onOrderRemoved={handleOrderRemoved} />}
             {transportPopUp && <CreateTransport onClose={closeTransporPopUpVisible}/>}
         </main>
     );

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import Photo from '../Photos/Vector.svg';
-import NewOrderPopup from '../Component/CreateOrder';
-
+import CreateTheme from './CreateTheme';
 const Nav = () => {
     const [isCreatePopupVisible, setCreatePopupVisible] = useState(false);
 
@@ -21,21 +19,15 @@ const Nav = () => {
                     <p>DashX</p>
                 </div>
                 <div className="navbar-content-menu-options">
-                    <div className="navbar-content-menu-options-search">
-                        <img src={Photo} alt="Search" />
-                    </div>
                     <div className="navbar-content-menu-options-new">
                         <button onClick={handleOpenCreatePopup}>
-                            <p>Add New Order</p>
+                            <p>Add New Theme</p>
                             <i className="fa-solid fa-plus"></i>
                         </button>
                     </div>
-                    <div className="navbar-content-menu-options-user">
-                        
-                    </div>
                 </div>
             </div>
-            {isCreatePopupVisible && <NewOrderPopup onClose={handleCloseCreatePopup} />}
+            {isCreatePopupVisible && <CreateTheme onClose={handleCloseCreatePopup} />}
         </nav>
     );
 }

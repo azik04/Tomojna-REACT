@@ -850,3 +850,8 @@ th:nth-child(6), td:nth-child(6) {
     align-items: center;
     flex-wrap: wrap;
 }
+.Azik{
+    width: 400px;
+    height: 400px;
+    padding: 200px 300px;
+}

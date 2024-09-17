@@ -14,7 +14,7 @@ const Header = () => {
     };
 
     const options = [
-        { src: Icon, altText: 'Icon', to: '/Orders' },
+        { src: Icon, altText: 'Icon', to: '/Theme' },
         { src: Add, altText: 'Add', to: '/FreightForwarder' },
         { src: Settings, altText: 'Settings', to: '/Stock' },
         { src: User, altText: 'User', to: '/Users' }
